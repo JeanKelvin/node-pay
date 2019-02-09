@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var morgan = require('morgan');
 var logger = require('../servicos/logger.js');
+var prometheus = require('./prometheus.js');
 
 module.exports = function(){
   var app = express();
@@ -21,11 +22,13 @@ module.exports = function(){
 
   app.use(expressValidator());
 
+  prometheus(app);
+
   consign()
    .include('controllers')
    .then('persistencia')
    .then('servicos')
    .into(app);
-
+   
   return app;
 }
